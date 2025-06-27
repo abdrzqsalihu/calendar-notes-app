@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 interface NoteContextType {
@@ -11,7 +11,14 @@ const NoteContext = createContext<NoteContextType | undefined>(undefined);
 export const NoteProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [notes, setNotes] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem("calendar-notes");
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem("calendar-notes", JSON.stringify(notes));
+  }, [notes]);
 
   const setNote = (dateKey: string, note: string) => {
     setNotes((prev) => ({
