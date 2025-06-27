@@ -1,9 +1,11 @@
 import "./App.css";
+import Calendar from "./components/Calender";
 
 function App() {
   return (
     <>
-      <div>Hello World</div>
+      <h1>Calendar</h1>
+      <Calendar />
     </>
   );
 }
