@@ -60,3 +60,12 @@
     }
   }
 }
+
+.note-dot {
+  display: block;
+  margin: 2px auto 0;
+  width: 6px;
+  height: 6px;
+  background-color: rgb(37, 216, 37);
+  border-radius: 50%;
+}

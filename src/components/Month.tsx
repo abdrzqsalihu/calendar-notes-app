@@ -1,4 +1,5 @@
 import React from "react";
+import { useNoteContext } from "../context/NoteContext";
 
 interface MonthProps {
   date: Date;
@@ -11,6 +12,7 @@ const Month: React.FC<MonthProps> = ({ date, highlightToday }) => {
   const year = date.getFullYear();
   const month = date.getMonth();
   const today = new Date();
+  const { notes } = useNoteContext();
 
   // First day of the month
   const firstDay = new Date(year, month, 1);
@@ -65,6 +67,12 @@ const Month: React.FC<MonthProps> = ({ date, highlightToday }) => {
                           )}-${String(day).padStart(2, "0")}`}
                         >
                           {day}
+                          {notes[
+                            `${year}-${String(month + 1).padStart(
+                              2,
+                              "0"
+                            )}-${String(day).padStart(2, "0")}`
+                          ] && <span className="note-dot" />}
                         </button>
                       </td>
                     );
