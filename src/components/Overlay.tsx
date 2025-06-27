@@ -3,11 +3,17 @@ import { useNoteContext } from "../context/NoteContext";
 
 interface OverlayProps {
   dateKey: string;
-  position: { top: number; left: number };
+  position: { top: number; left: number; width: number };
+  align: "left" | "right" | "center";
   onClose: () => void;
 }
 
-const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
+const Overlay: React.FC<OverlayProps> = ({
+  dateKey,
+  position,
+  align,
+  onClose,
+}) => {
   const { notes, setNote } = useNoteContext();
   const [value, setValue] = useState(notes[dateKey] || "");
 
@@ -31,21 +37,31 @@ const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
+  const overlayWidth = 200;
+
+  const calculatedLeft =
+    align === "center"
+      ? position.left + position.width / 2 - overlayWidth / 2
+      : align === "left"
+      ? position.left + position.width - overlayWidth
+      : position.left;
+
   return (
     <div
-      className="overlay"
+      className={`overlay ${
+        align === "left"
+          ? "align-left"
+          : align === "right"
+          ? "align-right"
+          : "align-center"
+      }`}
       ref={overlayRef}
       style={{
         position: "absolute",
         top: position.top,
-        left: position.left,
+        left: calculatedLeft,
         zIndex: 1000,
-        background: "#fff",
-        border: "1px solid #ccc",
-        padding: "0.75rem",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: 250,
+        width: overlayWidth,
       }}
     >
       <strong>{dateKey}</strong>
@@ -71,8 +87,27 @@ const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
           justifyContent: "space-between",
         }}
       >
-        <button onClick={() => onClose()}>Close</button>
         <button
+          style={{
+            padding: "6px 12px",
+            backgroundColor: "#e2e8f0",
+            border: "1px solid #cbd5e0",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+          onClick={() => onClose()}
+        >
+          Close
+        </button>
+        <button
+          style={{
+            padding: "6px 12px",
+            backgroundColor: "#3182ce",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
           onClick={() => {
             setNote(dateKey, value.trim());
             onClose();
