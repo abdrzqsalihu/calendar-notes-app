@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { useNoteContext } from "../context/NoteContext";
 
 interface OverlayProps {
   dateKey: string;
@@ -7,7 +8,15 @@ interface OverlayProps {
 }
 
 const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
+  const { notes, setNote } = useNoteContext();
+  const [value, setValue] = useState(notes[dateKey] || "");
+
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // this update local state if note changes
+  useEffect(() => {
+    setValue(notes[dateKey] || "");
+  }, [dateKey, notes]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -18,7 +27,6 @@ const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
         onClose();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
@@ -37,11 +45,42 @@ const Overlay: React.FC<OverlayProps> = ({ dateKey, position, onClose }) => {
         padding: "0.75rem",
         borderRadius: "8px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        width: 250,
       }}
     >
       <strong>{dateKey}</strong>
-      <p style={{ margin: "0.5rem 0 0" }}>Hello world</p>
-      <button onClick={onClose}>Close</button>
+      <textarea
+        value={value}
+        maxLength={100}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter note..."
+        style={{
+          marginTop: "0.5rem",
+          width: "100%",
+          height: "60px",
+          resize: "none",
+          borderRadius: "4px",
+          padding: "0.4rem",
+          border: "1px solid #ccc",
+        }}
+      />
+      <div
+        style={{
+          marginTop: "0.5rem",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <button onClick={() => onClose()}>Close</button>
+        <button
+          onClick={() => {
+            setNote(dateKey, value.trim());
+            onClose();
+          }}
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 };
