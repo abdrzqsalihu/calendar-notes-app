@@ -1,5 +1,6 @@
 import React from "react";
 import Month from "./Month";
+import "../styles/Calender.scss";
 
 const Calendar: React.FC = () => {
   const today = new Date();

@@ -4,7 +4,7 @@ import Calendar from "./components/Calender";
 function App() {
   return (
     <>
-      <h1>Calendar</h1>
+      <h1 className="app-title">Calendar</h1>
       <Calendar />
     </>
   );
