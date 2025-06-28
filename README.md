@@ -1,69 +1,73 @@
-# React + TypeScript + Vite
+# Calendar Notes App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple, accessible calendar application built with React and TypeScript. It displays three months in a grid layout and allows users to click on any date to add a short note via an overlay popup. Notes are persisted using `localStorage`.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- Displays previous, current, and next month in a responsive grid
+- Highlights today's date
+- Clickable dates open an overlay for adding/viewing notes
+- Notes saved per-date and persisted in `localStorage`
+- Overlay dynamically aligns to clicked date (left, center, or right)
+- Accessibility features:
+  - Keyboard navigation
+  - Focus trap inside overlay
+  - ESC to close
+  - ARIA-compliant modals and buttons
+- Responsive layout for desktop and mobile
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🧠 Approach
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### 🗂️ State Management
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **React Context API** is used to store and update note data
+- Notes are stored in memory and synced with `localStorage` using `useEffect`.
+
+### 📍 Overlay Positioning
+
+- When a date is clicked, its `getBoundingClientRect` is used to capture position and width.
+- The app determines overlay alignment:
+  - `left` for right-aligned calendar cells (e.g., days 5–7)
+  - `right` for left-aligned calendar cells (e.g., days 1–2)
+  - `center` for middle column (day 4) or on mobile
+- The overlay positions itself dynamically and includes an arrow pointing to the clicked date using CSS.
+
+---
+
+## 🔄 Trade-offs & Future Improvements
+
+### ✅ What works well:
+- Dynamic overlay with accurate pointer positioning
+- Keyboard-accessible experience
+- Seamless note editing and saving
+
+### 🔧 If I had more time:
+- Improve date keyboard navigation (arrow keys to move days)
+- Add animations to overlay open/close
+- Improve styling with a component library like Tailwind
+- Sync notes across devices using backend storage
+---
+
+## 🛠️ Local Setup Instructions
+
+1. **Clone the repo**
+
+```bash
+git clone https://github.com/abdrzqsalihu/calender-app.git
+cd calender-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. **Install dependencies**
+```bash
+npm install
 ```
+
+3. **Start the development server**
+```bash
+npm run dev
+```
+
