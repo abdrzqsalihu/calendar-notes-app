@@ -57,8 +57,8 @@ A simple, accessible calendar application built with React and TypeScript. It di
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/abdrzqsalihu/calender-app.git
-cd calender-app
+git clone https://github.com/abdrzqsalihu/calendar-notes-app.git
+cd calendar-notes-app
 ```
 
 2. **Install dependencies**
