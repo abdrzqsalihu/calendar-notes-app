@@ -1,5 +1,5 @@
 import "./App.css";
-import Calendar from "./components/Calender";
+import Calendar from "./components/Calendar";
 import { NoteProvider } from "./context/NoteContext";
 
 function App() {
