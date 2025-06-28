@@ -18,6 +18,50 @@ const Overlay: React.FC<OverlayProps> = ({
   const [value, setValue] = useState(notes[dateKey] || "");
 
   const overlayRef = useRef<HTMLDivElement>(null);
+  const firstFocusableRef = useRef<HTMLTextAreaElement | null>(null);
+  const lastFocusableRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    firstFocusableRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        const first = firstFocusableRef.current;
+        const last = lastFocusableRef.current;
+
+        if (!first || !last) return;
+
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          // Tab forward
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener("keydown", trapFocus);
+    return () => document.removeEventListener("keydown", trapFocus);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   // this update local state if note changes
   useEffect(() => {
@@ -56,6 +100,8 @@ const Overlay: React.FC<OverlayProps> = ({
           : "align-center"
       }`}
       ref={overlayRef}
+      aria-modal="true"
+      aria-labelledby={`overlay-title-${dateKey}`}
       style={{
         position: "absolute",
         top: position.top,
@@ -64,12 +110,14 @@ const Overlay: React.FC<OverlayProps> = ({
         width: overlayWidth,
       }}
     >
-      <strong>{dateKey}</strong>
+      <strong id={`overlay-title-${dateKey}`}>{dateKey}</strong>
       <textarea
+        ref={firstFocusableRef}
         value={value}
         maxLength={100}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Enter note..."
+        aria-label="Note text"
         style={{
           marginTop: "0.5rem",
           width: "100%",
@@ -100,6 +148,7 @@ const Overlay: React.FC<OverlayProps> = ({
           Close
         </button>
         <button
+          ref={lastFocusableRef}
           style={{
             padding: "6px 12px",
             backgroundColor: "#3182ce",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Month from "./Month";
 import "../styles/Calender.scss";
 import Overlay from "./Overlay";
@@ -26,7 +26,7 @@ const Calendar: React.FC = () => {
     "center"
   );
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
+  const clickedButtonRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -59,6 +59,9 @@ const Calendar: React.FC = () => {
           setOverlayAlign("center");
         }
 
+        (clickedButtonRef.current as HTMLElement | null)?.focus();
+        clickedButtonRef.current = target;
+
         setOverlayDate(date);
         setOverlayPos({
           top: rect.bottom + window.scrollY + 8,
@@ -82,7 +85,12 @@ const Calendar: React.FC = () => {
           dateKey={overlayDate}
           position={overlayPos}
           align={overlayAlign}
-          onClose={() => setOverlayDate(null)}
+          onClose={() => {
+            setOverlayDate(null);
+            setTimeout(() => {
+              clickedButtonRef.current?.focus();
+            }, 0);
+          }}
         />
       )}
     </div>

@@ -59,6 +59,8 @@ const Month: React.FC<MonthProps> = ({ date, highlightToday }) => {
                           type="button"
                           className={`day${isToday ? " today" : ""}`}
                           data-date={dateKey}
+                          tabIndex={0}
+                          aria-label={`${dateKey} ${isToday ? "today" : ""}`}
                         >
                           {day}
                           {notes[dateKey] && <span className="note-dot" />}
